@@ -75,8 +75,8 @@
                         <select id="rekomendasi" name="rekomendasi"
                             class="form-select @error('rekomendasi') is-invalid @enderror" required>
                             <option value="">Pilih Rekomendasi</option>
-                            <option value="ya" {{ $koleksi->rekomendasi == 'ya' ? 'selected' : '' }}>Ya</option>
-                            <option value="tidak" {{ $koleksi->rekomendasi == 'tidak' ? 'selected' : '' }}>Tidak</option>
+                            <option value="Ya" {{ $koleksi->rekomendasi == 'Ya' ? 'selected' : '' }}>Ya</option>
+                            <option value="Tidak" {{ $koleksi->rekomendasi == 'Tidak' ? 'selected' : '' }}>Tidak</option>
                         </select>
                         @error('rekomendasi')
                             <div class="invalid-feedback">{{ $message }}</div>

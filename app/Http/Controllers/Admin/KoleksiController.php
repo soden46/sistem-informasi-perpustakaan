@@ -32,7 +32,7 @@ class KoleksiController extends Controller
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|date',
             'isbn' => 'required|string|max:20',
-            'rekomendasi' => 'required|in:Ya,Tidak',
+            'rekomendasi' => 'required',
         ]);
 
         KoleksiModel::create($request->all());
@@ -56,7 +56,7 @@ class KoleksiController extends Controller
             'penerbit' => 'required|string|max:255',
             'tahun_terbit' => 'required|date',
             'isbn' => 'required|string|max:20',
-            'rekomendasi' => 'required|in:Ya,Tidak',
+            'rekomendasi' => 'required',
         ]);
 
         $koleksi = KoleksiModel::findOrFail($id);
