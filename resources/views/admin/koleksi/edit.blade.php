@@ -19,7 +19,7 @@
                             class="form-select @error('id_kategori') is-invalid @enderror" required>
                             <option value="">Pilih Kategori</option>
                             @foreach ($kategoris as $kategori)
-                                <option value="{{ $kategori->id }}"
+                                <option value="{{ $kategori->id_kategori }}"
                                     {{ $koleksi->id_kategori == $kategori->id_kategori ? 'selected' : '' }}>
                                     {{ $kategori->nama_kategori }}
                                 </option>
