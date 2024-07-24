@@ -31,9 +31,14 @@
                                 <td>{{ $kat->nama_kategori }}</td>
                                 <td>{!! Str::limit(strip_tags($kat->deskripsi), 50) !!}</td>
                                 <td>
-                                    <a href="{{ route('admin.kategori.edit', $kat->id_kategori) }}"
-                                        class="btn btn-warning btn-sm">Edit</a>
-                                    <!-- Add delete functionality if needed -->
+                                    <form action="{{ route('admin.kategori.destroy', $kat->id_kategori) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <a href="{{ route('admin.kategori.edit', $kat->id_kategori) }}"
+                                            class="btn btn-warning btn-sm">Edit</a>
+                                        <button class="btn btn-danger btn-sm" type="submit">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

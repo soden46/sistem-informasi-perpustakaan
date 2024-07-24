@@ -41,9 +41,14 @@
                                 <td>{{ $koleksi->isbn }}</td>
                                 <td>{{ $koleksi->rekomendasi }}</td>
                                 <td>
-                                    <a href="{{ route('admin.koleksi.edit', $koleksi->id_buku) }}"
-                                        class="btn btn-warning btn-sm">Edit</a>
-                                    <!-- Add delete functionality if needed -->
+                                    <form action="{{ route('admin.koleksi.destroy', $koleksi->id_buku) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <a href="{{ route('admin.koleksi.edit', $koleksi->id_buku) }}"
+                                            class="btn btn-warning btn-sm">Edit</a>
+                                        <button class="btn btn-danger btn-sm" type="submit">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
