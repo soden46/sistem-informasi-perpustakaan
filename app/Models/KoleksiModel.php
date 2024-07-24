@@ -19,7 +19,8 @@ class KoleksiModel extends Model
         'pengarang',
         'penerbit',
         'tahun_terbit',
-        'isbn'
+        'isbn',
+        'rekomendasi'
     ];
 
     protected $casts = [
