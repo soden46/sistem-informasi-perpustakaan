@@ -31,6 +31,7 @@ Route::get('/login', function () {
     return view('auth.choose_login');
 })->name('login');
 
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Login Admin
 Route::get('/login/admin', [LoginController::class, 'showAdminLoginForm'])->name('login.admin');
