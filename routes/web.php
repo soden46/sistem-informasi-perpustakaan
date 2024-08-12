@@ -6,10 +6,15 @@ use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\Admin\DendaController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\KoleksiController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\PeminjamanController;
 use App\Http\Controllers\Admin\PengembalianController;
+use App\Http\Controllers\Anggota\DashboardController as AnggotaDashboardController;
+use App\Http\Controllers\Anggota\KoleksiBukuController;
+use App\Http\Controllers\Anggota\PeminjamanController as AnggotaPeminjamanController;
 use App\Http\Controllers\Anggota\UserAnggotaController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,11 +44,11 @@ Route::post('/authenticate', [LoginController::class, 'authenticate'])->name('lo
 
 // Login Guru
 Route::get('/login/guru', [LoginController::class, 'showGuruLoginForm'])->name('login.guru');
-Route::post('/login/guru', [LoginController::class, 'guruLogin'])->name('login.guru.post');
+Route::post('/login/guru', [LoginController::class, 'authenticate'])->name('login.guru.post');
 
 // Login Siswa
 Route::get('/login/siswa', [LoginController::class, 'showSiswaLoginForm'])->name('login.siswa');
-Route::post('/login/siswa', [LoginController::class, 'siswaLogin'])->name('login.siswa.post');
+Route::post('/login/siswa', [LoginController::class, 'authenticate'])->name('login.siswa.post');
 
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
@@ -113,10 +118,34 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::put('/{id}', [DendaController::class, 'update'])->name('admin.denda.update');
         Route::delete('/{id}', [DendaController::class, 'destroy'])->name('admin.denda.destroy');
     });
+
+    Route::prefix('laporan')->group(function () {
+        Route::get('/laporan/peminjaman', [LaporanController::class, 'peminjaman'])->name('admin.laporan.peminjaman');
+        Route::get('/laporan/peminjaman/pdf', [LaporanController::class, 'peminjaman_pdf'])->name('admin.laporan.peminjaman.pdf');
+        Route::post('/laporan/anggota', [LaporanController::class, 'anggota'])->name('admin.laporan.anggota');
+        Route::get('/laporan/anggota/pdf', [LaporanController::class, 'anggota_pdf'])->name('admin.laporan.anggota');
+        Route::put('/laporan/diminati', [LaporanController::class, 'buku_diminati'])->name('admin.laporan.buku-diminati');
+        Route::delete('/laporan/diminati/pdf', [LaporanController::class, 'buku_dimiati_pdf'])->name('admin.laporan.buku-diminati');
+        Route::put('/laporan/denda', [LaporanController::class, 'denda'])->name('admin.laporan.denda');
+        Route::delete('/laporan/denda/pdf', [LaporanController::class, 'denda_pdf'])->name('admin.laporan.denda');
+    });
 });
 
 // Guru dan Siswa Routes
 Route::middleware(['auth', 'role:guru,siswa'])->prefix('anggota')->group(function () {
+    Route::get('/dashboard', [AnggotaDashboardController::class, 'index'])->name('anggota.dashboard');
     Route::get('/pinjam', [UserAnggotaController::class, 'pinjamBuku'])->name('anggota.pinjam');
     Route::post('/pinjam', [UserAnggotaController::class, 'storePeminjaman'])->name('anggota.storePeminjaman');
+
+    // Koleksi Buku
+    Route::prefix('koleksi')->group(function () {
+        Route::get('/buku', [KoleksiBukuController::class, 'index'])->name('anggota.koleksi');
+        Route::get('/pinjam/{id_buku}', [KoleksiBukuController::class, 'showPinjamForm'])->name('anggota.koleksi.buku.form');
+        Route::post('/buku/{id_buku}/pinjam', [KoleksiBukuController::class, 'post_pinjam'])->name('anggota.koleksi.buku.pinjam');
+    });
+
+    // Koleksi peminjaman
+    Route::prefix('peminjaman')->group(function () {
+        Route::get('/', [AnggotaPeminjamanController::class, 'index'])->name('anggota.peminjaman');
+    });
 });

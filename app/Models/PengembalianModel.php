@@ -17,7 +17,6 @@ class PengembalianModel extends Model
         'id_peminjaman',
         'id_anggota',
         'id_buku',
-        'tgl_pinjam',
         'tgl_kembali',
         'jumlah_denda'
     ];

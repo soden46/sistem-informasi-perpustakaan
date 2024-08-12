@@ -19,7 +19,7 @@ class LoginController extends Controller
         return view('auth.admin_login');
     }
 
-    // Proses login admin
+    // Proses login
     public function authenticate(Request $request)
     {
         $input = $request->all();
@@ -32,8 +32,9 @@ class LoginController extends Controller
         if (auth()->attempt(array('email' => $input['email'], 'password' => $input['password']))) {
             if (auth()->user()->role == 'admin') {
                 return redirect()->route('admin.dashboard');
-            } else if (auth()->user()->role == 'guru') {
-                return redirect()->route('guru');
+            } else if (auth()->user()->role == 'guru' || auth()->user()->role == 'siswa') {
+
+                return redirect()->route('anggota.dashboard');
             }
         } else {
             return redirect()->route('login')

@@ -11,11 +11,15 @@ use App\Models\KoleksiModel;
 use App\Models\PeminjamanModel;
 use Illuminate\Http\Request;
 
-class AnggotaController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
-        return view('anggota.dashboard', compact('anggota', 'koleksi'));
+        // Ambil data buku yang direkomendasikan
+        $books = KoleksiModel::where('rekomendasi', 'Ya')->get();
+
+        // Kirim data ke view dengan menggunakan nama variabel 'books'
+        return view('anggota.dashboard', compact('books'));
     }
 
     public function storePeminjaman(Request $request)

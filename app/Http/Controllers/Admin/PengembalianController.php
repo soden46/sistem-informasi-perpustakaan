@@ -23,10 +23,10 @@ class PengembalianController extends Controller
 
     public function create()
     {
-        $peminjaman = PeminjamanModel::all();
-        $anggota = AnggotaModel::all();
-        $koleksi = KoleksiModel::all();
-        return view('admin.pengembalian.create', compact('peminjaman', 'anggota', 'koleksi'));
+        $peminjamanOptions = PeminjamanModel::all();
+        $anggotaOptions = AnggotaModel::all();
+        $bukuOptions = KoleksiModel::all();
+        return view('admin.pengembalian.create', compact('peminjamanOptions', 'anggotaOptions', 'bukuOptions'));
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class PengembalianController extends Controller
             'id_peminjaman' => 'required|exists:peminjaman,id_peminjaman',
             'id_anggota' => 'required|exists:anggota,id_anggota',
             'id_buku' => 'required|exists:koleksi,id_buku',
-            'tgl_pengembalian' => 'required|date',
+            'tgl_kembali' => 'required|date',
             'denda' => 'nullable|numeric|min:0'
         ]);
 
@@ -45,25 +45,26 @@ class PengembalianController extends Controller
 
     public function edit($id)
     {
-        $pengembalian = PengembalianModel::findOrFail($id);
-        $peminjaman = PeminjamanModel::all();
-        $anggota = AnggotaModel::all();
-        $koleksi = KoleksiModel::all();
-        return view('admin.pengembalian.edit', compact('pengembalian', 'peminjaman', 'anggota', 'koleksi'));
+        $pengembalian = PengembalianModel::with('peminjaman')->findOrFail($id);
+        $peminjamanOptions = PeminjamanModel::all();
+        $anggotaOptions = AnggotaModel::all();
+        $bukuOptions = KoleksiModel::all();
+        return view('admin.pengembalian.edit', compact('pengembalian', 'peminjamanOptions', 'anggotaOptions', 'bukuOptions'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+
+        $validatedData = $request->validate([
             'id_peminjaman' => 'required|exists:peminjaman,id_peminjaman',
             'id_anggota' => 'required|exists:anggota,id_anggota',
             'id_buku' => 'required|exists:koleksi,id_buku',
-            'tgl_pengembalian' => 'required|date',
-            'denda' => 'nullable|numeric|min:0'
+            'tgl_kembali' => 'required|date',
+            'jumlah_denda' => 'nullable|numeric|min:0'
         ]);
 
         $pengembalian = PengembalianModel::findOrFail($id);
-        $pengembalian->update($request->all());
+        $pengembalian->update($validatedData);
         return redirect()->route('admin.pengembalian.index')->with('success', 'Pengembalian berhasil diperbarui');
     }
 

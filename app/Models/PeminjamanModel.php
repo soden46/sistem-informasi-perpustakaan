@@ -14,10 +14,19 @@ class PeminjamanModel extends Model
     protected $primaryKey = 'id_peminjaman';
 
     protected $fillable = [
+        'id_peminjaman',
         'id_anggota',
         'id_buku',
         'tgl_pinjam',
-        'tgl_kembali'
+        'tgl_kembali',
+    ];
+
+    // Kolom tanggal
+    protected $dates = ['tgl_pinjam', 'tgl_kembali'];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function anggota()

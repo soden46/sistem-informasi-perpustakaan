@@ -15,55 +15,62 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $peminjamans = PeminjamanModel::with('anggota', 'buku')->get();
+        $peminjamans = PeminjamanModel::with('anggota', 'buku')->paginate(10);
+
         return view('admin.peminjaman.index', compact('peminjamans'));
     }
 
     public function create()
     {
         $anggota = AnggotaModel::all();
-        $koleksi = KoleksiModel::all();
-        return view('admin.peminjaman.create', compact('anggota', 'koleksi'));
+        $buku = KoleksiModel::all();
+        return view('admin.peminjaman.create', compact('anggota', 'buku'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'id_anggota' => 'required|exists:anggota,id_anggota',
             'id_buku' => 'required|exists:koleksi,id_buku',
             'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date'
+            'tgl_kembali' => 'required|date',
+            'jumlah_denda' => 'nullable|numeric',
         ]);
 
-        PeminjamanModel::create($request->all());
-        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan');
+        PeminjamanModel::create($validatedData);
+
+        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $peminjaman = PeminjamanModel::findOrFail($id);
         $anggota = AnggotaModel::all();
-        $koleksi = KoleksiModel::all();
-        return view('admin.peminjaman.edit', compact('peminjaman', 'anggota', 'koleksi'));
+        $buku = KoleksiModel::all();
+        return view('admin.peminjaman.edit', compact('peminjaman', 'anggota', 'buku'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'id_anggota' => 'required|exists:anggota,id_anggota',
             'id_buku' => 'required|exists:koleksi,id_buku',
             'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date'
+            'tgl_kembali' => 'required|date',
+            'jumlah_denda' => 'nullable|numeric',
         ]);
 
         $peminjaman = PeminjamanModel::findOrFail($id);
-        $peminjaman->update($request->all());
-        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil diperbarui');
+        $peminjaman->update($validatedData);
+
+        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        PeminjamanModel::destroy($id);
-        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil dihapus');
+        $peminjaman = PeminjamanModel::findOrFail($id);
+        $peminjaman->delete();
+
+        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil dihapus.');
     }
 }
